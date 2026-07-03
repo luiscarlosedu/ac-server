@@ -1,0 +1,2365 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      AC Server — Hospedagem e sistemas de ponta para o setor público
+    </title>
+    <meta
+      name="description"
+      content="Tecnologia no serviço público: hospedagem, servidores VPS e dedicados, criação de sites e sistemas para órgãos públicos. Suporte e treinamento sobre o eSocial."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============================================================
+   AC SERVER — Material You (MD3)
+   Design tokens seedados na marca (navy #313b5f + laranja #ff8c00)
+   expressos pelo sistema tonal do Material You.
+   Para trocar pro seed roxo canônico do MD3, altere apenas o
+   bloco :root abaixo (--md-primary e derivados).
+   ============================================================ */
+      :root {
+        /* ---- Cor: papel primário (navy da marca) ---- */
+        --md-primary: #2e4374;
+        --md-on-primary: #ffffff;
+        --md-primary-container: #dce3f8;
+        --md-on-primary-container: #0e1b3d;
+
+        /* ---- Cor: secundário ---- */
+        --md-secondary: #565e7a;
+        --md-secondary-container: #e1e4f1;
+        --md-on-secondary-container: #171a29;
+
+        /* ---- Cor: terciário (laranja da marca — accent/FAB) ---- */
+        --md-tertiary: #e07b00;
+        --md-on-tertiary: #ffffff;
+        --md-tertiary-container: #ffe1bf;
+        --md-on-tertiary-container: #2a1700;
+        --md-tertiary-bright: #ff8c00; /* usado só como glow/aura */
+
+        /* ---- Superfícies tonais (nunca branco puro no fundo) ---- */
+        --md-surface: #fbfafe;
+        --md-surface-container-low: #f5f4fb;
+        --md-surface-container: #eeeef8;
+        --md-surface-container-high: #e7e8f3;
+        --md-on-surface: #1a1b21;
+        --md-on-surface-variant: #45464f;
+
+        /* ---- Superfície invertida (seções navy full-bleed) ---- */
+        --md-inverse: #212a4c;
+        --md-inverse-2: #1a2140;
+        --md-on-inverse: #e9ecf8;
+
+        /* ---- Contornos ---- */
+        --md-outline: #75767f;
+        --md-outline-variant: #c5c6d2;
+
+        /* ---- Raios ---- */
+        --r-xs: 8px;
+        --r-sm: 12px;
+        --r-md: 16px;
+        --r-lg: 24px;
+        --r-xl: 28px;
+        --r-2xl: 32px;
+        --r-hero: 48px;
+        --r-pill: 999px;
+
+        /* ---- Movimento (easing assinatura do MD3) ---- */
+        --ease: cubic-bezier(0.2, 0, 0, 1);
+        --dur: 300ms;
+        --dur-fast: 200ms;
+
+        /* ---- Elevação (sombras suaves, tingidas de navy) ---- */
+        --e1: 0 1px 2px rgba(20, 26, 54, 0.1), 0 1px 3px rgba(20, 26, 54, 0.06);
+        --e2: 0 2px 6px rgba(20, 26, 54, 0.1), 0 8px 18px rgba(20, 26, 54, 0.1);
+        --e3:
+          0 10px 24px rgba(20, 26, 54, 0.14), 0 20px 44px rgba(20, 26, 54, 0.14);
+
+        --maxw: 1200px;
+      }
+
+      /* ---------------- Reset & base ---------------- */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family: "Roboto", system-ui, sans-serif;
+        color: var(--md-on-surface);
+        background: var(--md-surface);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p {
+        margin: 0;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      :focus-visible {
+        outline: none;
+        box-shadow:
+          0 0 0 2px var(--md-surface),
+          0 0 0 4px var(--md-primary);
+        border-radius: var(--r-xs);
+      }
+
+      .wrap {
+        max-width: var(--maxw);
+        margin-inline: auto;
+        padding-inline: 24px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--md-primary);
+        background: var(--md-primary-container);
+        padding: 6px 14px;
+        border-radius: var(--r-pill);
+      }
+      .eyebrow.on-dark {
+        color: #cdd6f7;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .eyebrow .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--md-tertiary);
+      }
+
+      /* skip link */
+      .skip {
+        position: absolute;
+        left: 16px;
+        top: -60px;
+        background: var(--md-primary);
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: var(--r-pill);
+        z-index: 200;
+        transition: top var(--dur) var(--ease);
+      }
+      .skip:focus {
+        top: 16px;
+      }
+
+      /* ---------------- Botões (pill + state layers) ---------------- */
+      .btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 48px;
+        padding: 0 28px;
+        border: none;
+        border-radius: var(--r-pill);
+        font-family: inherit;
+        font-size: 0.95rem;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        cursor: pointer;
+        transition:
+          box-shadow var(--dur) var(--ease),
+          transform var(--dur-fast) var(--ease),
+          background var(--dur) var(--ease);
+        white-space: nowrap;
+      }
+      .btn:active {
+        transform: scale(0.95);
+      }
+      .btn--filled {
+        background: var(--md-primary);
+        color: var(--md-on-primary);
+      }
+      .btn--filled:hover {
+        box-shadow: var(--e2);
+        background: #33497d;
+      }
+      .btn--tertiary {
+        background: var(--md-tertiary);
+        color: var(--md-on-tertiary);
+      }
+      .btn--tertiary:hover {
+        box-shadow: var(--e2);
+        background: #f08a00;
+      }
+      .btn--tonal {
+        background: var(--md-secondary-container);
+        color: var(--md-on-secondary-container);
+      }
+      .btn--tonal:hover {
+        box-shadow: var(--e1);
+        background: #d8dcee;
+      }
+      .btn--outlined {
+        background: transparent;
+        color: var(--md-primary);
+        border: 1px solid var(--md-outline-variant);
+      }
+      .btn--outlined:hover {
+        background: rgba(46, 67, 116, 0.06);
+      }
+      .btn--ghost-light {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+      }
+      .btn--ghost-light:hover {
+        background: rgba(255, 255, 255, 0.18);
+      }
+      .btn--sm {
+        height: 40px;
+        padding: 0 20px;
+        font-size: 0.875rem;
+      }
+      .btn svg {
+        width: 20px;
+        height: 20px;
+        flex: none;
+      }
+
+      /* ---------------- Header ---------------- */
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: color-mix(in srgb, var(--md-surface) 82%, transparent);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-bottom: 1px solid transparent;
+        transition:
+          border-color var(--dur) var(--ease),
+          box-shadow var(--dur) var(--ease),
+          background var(--dur) var(--ease);
+      }
+      .header.is-scrolled {
+        border-bottom-color: var(--md-outline-variant);
+        box-shadow: var(--e1);
+      }
+      .header__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 74px;
+        gap: 20px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        font-size: 1.15rem;
+        letter-spacing: 0.02em;
+        color: var(--md-on-surface);
+      }
+      .brand__mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--md-primary), #3d5490);
+        color: #fff;
+        box-shadow: var(--e1);
+      }
+      .brand__mark svg {
+        width: 24px;
+        height: 24px;
+      }
+      .brand small {
+        display: block;
+        font-size: 0.62rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        color: var(--md-on-surface-variant);
+        text-transform: uppercase;
+        line-height: 1;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .nav a {
+        position: relative;
+        padding: 10px 16px;
+        border-radius: var(--r-pill);
+        font-size: 0.92rem;
+        font-weight: 500;
+        color: var(--md-on-surface-variant);
+        transition:
+          background var(--dur-fast) var(--ease),
+          color var(--dur-fast) var(--ease);
+      }
+      .nav a:hover {
+        background: rgba(46, 67, 116, 0.08);
+        color: var(--md-on-surface);
+      }
+      .nav a.active {
+        color: var(--md-primary);
+        background: var(--md-primary-container);
+      }
+      .header__cta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .menu-toggle {
+        display: none;
+        width: 46px;
+        height: 46px;
+        border: none;
+        border-radius: 14px;
+        background: var(--md-surface-container);
+        cursor: pointer;
+        place-items: center;
+        color: var(--md-on-surface);
+      }
+      .menu-toggle svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* mobile drawer */
+      .drawer {
+        position: fixed;
+        inset: 0;
+        z-index: 150;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .drawer__scrim {
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 26, 54, 0.42);
+        opacity: 0;
+        transition: opacity var(--dur) var(--ease);
+      }
+      .drawer__panel {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: min(84vw, 340px);
+        background: var(--md-surface);
+        padding: 24px;
+        transform: translateX(100%);
+        transition: transform var(--dur) var(--ease);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow: var(--e3);
+      }
+      .drawer.open {
+        visibility: visible;
+        pointer-events: auto;
+      }
+      .drawer.open .drawer__scrim {
+        opacity: 1;
+      }
+      .drawer.open .drawer__panel {
+        transform: none;
+      }
+      .drawer__panel .d-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .drawer__panel a.d-link {
+        padding: 14px 18px;
+        border-radius: var(--r-md);
+        font-weight: 500;
+        font-size: 1.05rem;
+        color: var(--md-on-surface);
+        transition: background var(--dur-fast) var(--ease);
+      }
+      .drawer__panel a.d-link:hover {
+        background: var(--md-surface-container);
+      }
+      .drawer__panel .btn {
+        margin-top: 12px;
+      }
+      .icon-btn {
+        width: 44px;
+        height: 44px;
+        border: none;
+        background: var(--md-surface-container);
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        color: var(--md-on-surface);
+      }
+      .icon-btn svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* ---------------- Seções ---------------- */
+      section {
+        position: relative;
+      }
+      .section-pad {
+        padding-block: clamp(64px, 9vw, 120px);
+      }
+      .sec-head {
+        max-width: 680px;
+        margin-bottom: 56px;
+      }
+      .sec-head.center {
+        margin-inline: auto;
+        text-align: center;
+      }
+      h2.display {
+        font-size: clamp(2rem, 4.4vw, 3rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+        margin-top: 18px;
+      }
+      .lead {
+        color: var(--md-on-surface-variant);
+        font-size: clamp(1rem, 1.6vw, 1.18rem);
+        margin-top: 18px;
+      }
+
+      /* ---------------- Blur shapes ---------------- */
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.5;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* ---------------- Hero ---------------- */
+      .hero {
+        padding-top: clamp(24px, 4vw, 48px);
+        padding-bottom: clamp(48px, 7vw, 88px);
+      }
+      .hero__card {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--r-hero);
+        background: var(--md-surface-container);
+        padding: clamp(32px, 5vw, 72px);
+      }
+      .hero__grid {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 56px;
+        align-items: center;
+      }
+      .hero h1 {
+        font-size: clamp(2.4rem, 5.4vw, 3.7rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.015em;
+        margin-top: 22px;
+      }
+      .hero h1 .accent {
+        color: var(--md-primary);
+      }
+      .hero p.sub {
+        margin-top: 22px;
+        font-size: clamp(1.05rem, 1.8vw, 1.28rem);
+        color: var(--md-on-surface-variant);
+        max-width: 36ch;
+      }
+      .hero__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 34px;
+      }
+      .hero__trust {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 34px;
+      }
+      .chip-stat {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--md-surface);
+        border-radius: var(--r-pill);
+        padding: 9px 16px;
+        font-size: 0.85rem;
+        color: var(--md-on-surface-variant);
+        box-shadow: var(--e1);
+      }
+      .chip-stat b {
+        color: var(--md-on-surface);
+        font-weight: 700;
+      }
+
+      /* hero visual */
+      .hero__visual {
+        position: relative;
+        min-height: 340px;
+      }
+      .glass-card {
+        position: absolute;
+        border-radius: var(--r-2xl);
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: var(--e2);
+        padding: 22px;
+      }
+      .hv-main {
+        inset: 8% 0 8% 6%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 14px;
+        background: linear-gradient(150deg, var(--md-primary), #3a4f8a);
+        border: none;
+        color: #fff;
+      }
+      .hv-main .ring {
+        width: 64px;
+        height: 64px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.14);
+        display: grid;
+        place-items: center;
+      }
+      .hv-main .ring svg {
+        width: 34px;
+        height: 34px;
+        color: #fff;
+      }
+      .hv-main h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+      .hv-main p {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.82);
+      }
+      .hv-float {
+        right: -4%;
+        bottom: 2%;
+        width: 200px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .hv-float .pulse {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #2fbf71;
+        box-shadow: 0 0 0 6px rgba(47, 191, 113, 0.18);
+        flex: none;
+      }
+      .hv-float b {
+        display: block;
+        font-size: 1.05rem;
+        color: var(--md-on-surface);
+      }
+      .hv-float span {
+        font-size: 0.78rem;
+        color: var(--md-on-surface-variant);
+      }
+      .hv-top {
+        top: 2%;
+        right: 2%;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .hv-top svg {
+        width: 22px;
+        height: 22px;
+        color: var(--md-tertiary);
+      }
+      .hv-top span {
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--md-on-surface);
+      }
+
+      /* ---------------- Serviços ---------------- */
+      .svc-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .card {
+        position: relative;
+        background: var(--md-surface-container);
+        border-radius: var(--r-lg);
+        padding: 30px;
+        box-shadow: var(--e1);
+        transition:
+          transform var(--dur) var(--ease),
+          box-shadow var(--dur) var(--ease),
+          background var(--dur) var(--ease);
+      }
+      .card:hover {
+        transform: translateY(-4px) scale(1.015);
+        box-shadow: var(--e2);
+        background: var(--md-surface-container-high);
+      }
+      .card__icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 20px;
+        background: var(--md-primary-container);
+        color: var(--md-primary);
+        transition: transform var(--dur) var(--ease);
+      }
+      .card:hover .card__icon {
+        transform: scale(1.06) rotate(-3deg);
+      }
+      .card__icon svg {
+        width: 28px;
+        height: 28px;
+      }
+      .card h3 {
+        font-size: 1.28rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .card p {
+        color: var(--md-on-surface-variant);
+        font-size: 0.98rem;
+      }
+
+      /* painel setor público */
+      .pub {
+        margin-top: 28px;
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--r-2xl);
+        background: var(--md-primary-container);
+        padding: clamp(30px, 4vw, 52px);
+      }
+      .pub__grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 40px;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+      }
+      .pub h3 {
+        font-size: clamp(1.5rem, 2.6vw, 2rem);
+        font-weight: 700;
+        color: var(--md-on-primary-container);
+        line-height: 1.2;
+      }
+      .pub p {
+        color: #33406a;
+        margin-top: 14px;
+      }
+      .pub .btn {
+        margin-top: 24px;
+      }
+      .pub__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--md-surface);
+        color: var(--md-on-surface);
+        border-radius: var(--r-pill);
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        box-shadow: var(--e1);
+        transition:
+          transform var(--dur-fast) var(--ease),
+          box-shadow var(--dur-fast) var(--ease);
+      }
+      .chip:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--e2);
+      }
+      .chip svg {
+        width: 16px;
+        height: 16px;
+        color: var(--md-tertiary);
+      }
+
+      /* ---------------- Diferenciais (navy full-bleed) ---------------- */
+      .diff {
+        background: transparent;
+      }
+      .diff__inner {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--r-hero);
+        background: linear-gradient(
+          160deg,
+          var(--md-inverse),
+          var(--md-inverse-2)
+        );
+        color: var(--md-on-inverse);
+        padding: clamp(48px, 7vw, 96px) clamp(28px, 5vw, 72px);
+      }
+      .diff .sec-head h2.display {
+        color: #fff;
+      }
+      .diff .lead {
+        color: rgba(233, 236, 248, 0.72);
+      }
+      .diff__grid {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .gcard {
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: var(--r-lg);
+        padding: 28px;
+        transition:
+          transform var(--dur) var(--ease),
+          background var(--dur) var(--ease),
+          border-color var(--dur) var(--ease);
+      }
+      .gcard:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.22);
+      }
+      .gcard__icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 18px;
+        background: rgba(224, 123, 0, 0.18);
+        color: #ffb057;
+      }
+      .gcard__icon svg {
+        width: 26px;
+        height: 26px;
+      }
+      .gcard h3 {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: #fff;
+      }
+      .gcard p {
+        color: rgba(233, 236, 248, 0.72);
+        font-size: 0.94rem;
+      }
+
+      .link-card {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+      }
+
+      /* ---------------- Sobre ---------------- */
+      .about__grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: center;
+      }
+      .about__text p {
+        color: var(--md-on-surface-variant);
+        margin-top: 16px;
+      }
+      .about__text p:first-of-type {
+        margin-top: 24px;
+      }
+      .about__media {
+        position: relative;
+        min-height: 420px;
+      }
+      .organic {
+        position: absolute;
+        inset: 0;
+        border-radius: 56px 8px 56px 8px;
+        overflow: hidden;
+        background: linear-gradient(150deg, var(--md-primary), #46609e);
+        box-shadow: var(--e3);
+      }
+      .organic__deco {
+        position: absolute;
+        inset: 0;
+        opacity: 0.9;
+      }
+      .organic .badge {
+        position: absolute;
+        left: 24px;
+        bottom: 24px;
+        right: 24px;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(6px);
+        border-radius: var(--r-xl);
+        padding: 20px 24px;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        box-shadow: var(--e2);
+      }
+      .organic .badge .n {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--md-primary);
+        line-height: 1;
+      }
+      .organic .badge p {
+        font-size: 0.86rem;
+        color: var(--md-on-surface-variant);
+      }
+      .about__stats {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 32px;
+      }
+      .stat {
+        background: var(--md-surface-container);
+        border-radius: var(--r-lg);
+        padding: 18px 22px;
+        flex: 1;
+        min-width: 130px;
+      }
+      .stat b {
+        display: block;
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: var(--md-primary);
+      }
+      .stat span {
+        font-size: 0.84rem;
+        color: var(--md-on-surface-variant);
+      }
+
+      /* ---------------- Contato ---------------- */
+      .contact {
+        background: transparent;
+      }
+      .contact__inner {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--r-hero);
+        background: linear-gradient(
+          160deg,
+          var(--md-inverse),
+          var(--md-inverse-2)
+        );
+        color: var(--md-on-inverse);
+        padding: clamp(40px, 6vw, 80px) clamp(28px, 5vw, 68px);
+      }
+      .contact__grid {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 56px;
+      }
+      .contact h2.display {
+        color: #fff;
+      }
+      .contact .lead {
+        color: rgba(233, 236, 248, 0.75);
+      }
+      .contact__info {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: 32px;
+      }
+      .info-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .info-row .ic {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        flex: none;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffb057;
+      }
+      .info-row .ic svg {
+        width: 22px;
+        height: 22px;
+      }
+      .info-row small {
+        display: block;
+        color: rgba(233, 236, 248, 0.6);
+        font-size: 0.78rem;
+      }
+      .info-row b {
+        font-weight: 500;
+        color: #fff;
+      }
+
+      /* form — MD3 filled text field */
+      .form {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: var(--r-2xl);
+        padding: clamp(24px, 3vw, 36px);
+        backdrop-filter: blur(8px);
+      }
+      .field {
+        margin-bottom: 18px;
+      }
+      .field label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: rgba(233, 236, 248, 0.8);
+        margin-bottom: 6px;
+      }
+      .field input,
+      .field textarea {
+        width: 100%;
+        font-family: inherit;
+        font-size: 1rem;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.08);
+        border: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.28);
+        border-radius: var(--r-sm) var(--r-sm) 0 0;
+        padding: 14px 16px;
+        transition:
+          border-color var(--dur-fast) var(--ease),
+          background var(--dur-fast) var(--ease);
+      }
+      .field textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+      .field input::placeholder,
+      .field textarea::placeholder {
+        color: rgba(233, 236, 248, 0.4);
+      }
+      .field input:focus,
+      .field textarea:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.12);
+        border-bottom-color: var(--md-tertiary-bright);
+      }
+      .field.invalid input,
+      .field.invalid textarea {
+        border-bottom-color: #ff8a80;
+      }
+      .field .err {
+        display: none;
+        font-size: 0.78rem;
+        color: #ffb4ab;
+        margin-top: 6px;
+      }
+      .field.invalid .err {
+        display: block;
+      }
+      .form .btn {
+        width: 100%;
+        margin-top: 6px;
+      }
+      .form__note {
+        font-size: 0.78rem;
+        color: rgba(233, 236, 248, 0.55);
+        margin-top: 14px;
+        text-align: center;
+      }
+
+      /* ---------------- Mapa ---------------- */
+      .map-wrap {
+        border-radius: var(--r-2xl);
+        overflow: hidden;
+        box-shadow: var(--e2);
+        line-height: 0;
+      }
+      .map-wrap iframe {
+        width: 100%;
+        height: 380px;
+        border: 0;
+        display: block;
+      }
+
+      /* ---------------- Footer ---------------- */
+      .footer {
+        background: var(--md-inverse-2);
+        color: var(--md-on-inverse);
+        padding-block: 56px 28px;
+        margin-top: 12px;
+      }
+      .footer__grid {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: 64px;
+        align-items: start;
+      }
+      .footer__logo {
+        width: 170px;
+        height: auto;
+        margin-bottom: 22px;
+      }
+      .footer__addr {
+        color: rgba(233, 236, 248, 0.6);
+        font-size: 0.92rem;
+        line-height: 1.7;
+        max-width: 40ch;
+      }
+      .footer__title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 22px;
+      }
+      .footer__contact {
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+        align-items: flex-end;
+      }
+      .fc-row {
+        display: flex;
+        gap: 11px;
+        align-items: center;
+        color: rgba(233, 236, 248, 0.72);
+        font-size: 0.92rem;
+        transition: color var(--dur-fast) var(--ease);
+      }
+      .fc-row svg {
+        width: 18px;
+        height: 18px;
+        flex: none;
+        color: rgba(233, 236, 248, 0.5);
+        transition: color var(--dur-fast) var(--ease);
+      }
+      a.fc-row:hover {
+        color: #fff;
+      }
+      a.fc-row:hover svg {
+        color: var(--md-tertiary);
+      }
+      .footer__bottom {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 48px;
+        padding-top: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: space-between;
+        color: rgba(233, 236, 248, 0.55);
+        font-size: 0.85rem;
+      }
+
+      .footer-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        height: 100%;
+      }
+
+      /* ---------------- Reveal on scroll ---------------- */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.7s var(--ease),
+          transform 0.7s var(--ease);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* ---------------- Responsivo ---------------- */
+      @media (max-width: 960px) {
+        .nav,
+        .header__cta .btn {
+          display: none;
+        }
+        .hv-float {
+          bottom: 0;
+          top: 80%;
+        }
+        .hv-float div {
+          display: flex;
+          flex-direction: column;
+          gap: 0px;
+        }
+        .menu-toggle {
+          display: grid;
+        }
+        .hero__grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+        .hero__visual {
+          min-height: 300px;
+        }
+        .svc-grid,
+        .diff__grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .pub__grid,
+        .about__grid,
+        .contact__grid {
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+        .about__media {
+          min-height: 340px;
+          order: -1;
+        }
+        .footer__grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 40px;
+        }
+      }
+      @media (max-width: 600px) {
+        .wrap {
+          padding-inline: 18px;
+        }
+        .svc-grid,
+        .diff__grid {
+          grid-template-columns: 1fr;
+        }
+        :root {
+          --r-hero: 28px;
+          --r-2xl: 24px;
+        }
+        .hero__visual {
+          min-height: 260px;
+        }
+        .footer__grid {
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+        .footer-right {
+          align-items: flex-start;
+          height: auto;
+        }
+        .footer__contact {
+          align-items: flex-start;
+        }
+        .fc-row {
+          flex-direction: row-reverse;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#main">Ir para o conteúdo</a>
+
+    <!-- ================= HEADER ================= -->
+    <header class="header" id="top">
+      <div class="wrap header__inner">
+        <a class="brand" href="#top" aria-label="AC Server — início">
+          <img style="width: 120px" src="assets/logo.png" alt="AC Server" />
+        </a>
+        <nav class="nav" aria-label="Principal">
+          <a href="#home" class="active">Início</a>
+          <a href="#servicos">Serviços</a>
+          <a href="#diferenciais">Diferenciais</a>
+          <a href="#sobre">Sobre</a>
+          <a href="#contato">Contato</a>
+        </nav>
+        <div class="header__cta">
+          <a
+            class="btn btn--filled btn--sm"
+            href="https://api.whatsapp.com/send?phone=5581997306908&text=Quero%20fazer%20um%20or%C3%A7amento!"
+            target="_blank"
+            rel="noopener"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.01c-.24.68-1.42 1.31-1.96 1.36-.5.05-1.14.07-1.84-.12-.42-.13-.97-.31-1.66-.61-2.93-1.27-4.85-4.22-5-4.42-.15-.2-1.2-1.59-1.2-3.03s.76-2.15 1.03-2.45c.27-.29.59-.37.79-.37.2 0 .39 0 .57.01.18.01.43-.07.67.51.24.59.83 2.03.9 2.18.07.15.12.32.02.51-.09.2-.14.32-.27.49-.14.17-.29.38-.41.51-.14.14-.28.29-.12.57.15.29.68 1.12 1.46 1.81 1 .89 1.85 1.17 2.14 1.31.29.15.46.12.63-.07.17-.2.72-.85.91-1.14.19-.29.39-.24.65-.14.27.1 1.7.8 1.99.95.29.15.48.22.55.34.07.12.07.7-.17 1.38z"
+              />
+            </svg>
+            Orçamento
+          </a>
+          <button
+            class="menu-toggle"
+            id="menuOpen"
+            aria-label="Abrir menu"
+            aria-expanded="false"
+            aria-controls="drawer"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <line x1="4" y1="7" x2="20" y2="7" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="17" x2="20" y2="17" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- mobile drawer -->
+    <div class="drawer" id="drawer">
+      <div class="drawer__scrim" data-close></div>
+      <nav class="drawer__panel" aria-label="Menu">
+        <div class="d-head">
+          <span class="brand"
+            ><span class="brand__mark" aria-hidden="true"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              >
+                <rect x="3" y="4" width="18" height="6" rx="2" />
+                <rect x="3" y="14" width="18" height="6" rx="2" /></svg></span
+            >AC SERVER</span
+          >
+          <button class="icon-btn" data-close aria-label="Fechar menu">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <line x1="6" y1="6" x2="18" y2="18" />
+              <line x1="18" y1="6" x2="6" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <a class="d-link" href="#home" data-close>Início</a>
+        <a class="d-link" href="#servicos" data-close>Serviços</a>
+        <a class="d-link" href="#diferenciais" data-close>Diferenciais</a>
+        <a class="d-link" href="#sobre" data-close>Sobre</a>
+        <a class="d-link" href="#contato" data-close>Contato</a>
+        <a
+          class="btn btn--filled"
+          href="https://api.whatsapp.com/send?phone=81997306908&text=Quero%20fazer%20um%20or%C3%A7amento!"
+          target="_blank"
+          rel="noopener"
+          data-close
+          >Fazer orçamento</a
+        >
+      </nav>
+    </div>
+
+    <main id="main">
+      <!-- ================= HERO ================= -->
+      <section class="hero wrap" id="home">
+        <div class="hero__card">
+          <div
+            class="blob"
+            style="
+              background: var(--md-primary);
+              width: 460px;
+              height: 460px;
+              top: -160px;
+              left: -120px;
+              opacity: 0.22;
+            "
+          ></div>
+          <div
+            class="blob"
+            style="
+              background: var(--md-tertiary-bright);
+              width: 380px;
+              height: 380px;
+              bottom: -160px;
+              right: -90px;
+              opacity: 0.16;
+            "
+          ></div>
+          <div class="hero__grid">
+            <div class="reveal">
+              <span class="eyebrow"
+                ><span class="dot"></span>Soluções para órgãos públicos</span
+              >
+              <h1>
+                Hospedagem e <span class="accent">sistemas de ponta</span> para
+                o setor público.
+              </h1>
+              <p class="sub">
+                Servidores, sites e sistemas de gestão pública com suporte
+                próximo — do e‑Social ao Portal da Transparência.
+              </p>
+              <div class="hero__actions">
+                <a
+                  class="btn btn--filled"
+                  href="https://api.whatsapp.com/send?phone=5581997306908&text=Quero%20saber%20mais!"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.01c-.24.68-1.42 1.31-1.96 1.36-.5.05-1.14.07-1.84-.12-.42-.13-.97-.31-1.66-.61-2.93-1.27-4.85-4.22-5-4.42-.15-.2-1.2-1.59-1.2-3.03s.76-2.15 1.03-2.45c.27-.29.59-.37.79-.37.2 0 .39 0 .57.01.18.01.43-.07.67.51.24.59.83 2.03.9 2.18.07.15.12.32.02.51-.09.2-.14.32-.27.49-.14.17-.29.38-.41.51-.14.14-.28.29-.12.57.15.29.68 1.12 1.46 1.81 1 .89 1.85 1.17 2.14 1.31.29.15.46.12.63-.07.17-.2.72-.85.91-1.14.19-.29.39-.24.65-.14.27.1 1.7.8 1.99.95.29.15.48.22.55.34.07.12.07.7-.17 1.38z"
+                    />
+                  </svg>
+                  Falar no WhatsApp
+                </a>
+                <a class="btn btn--outlined" href="#servicos">Ver serviços</a>
+              </div>
+              <div class="hero__trust">
+                <span class="chip-stat"
+                  ><b>+10 anos</b> no serviço público</span
+                >
+                <span class="chip-stat"><b>Suporte</b> técnico próximo</span>
+                <span class="chip-stat">Base em <b>Caruaru‑PE</b></span>
+              </div>
+            </div>
+            <div class="hero__visual reveal" aria-hidden="true">
+              <div class="glass-card hv-main">
+                <div class="ring">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z" />
+                  </svg>
+                </div>
+                <h3>Nuvem gerenciada</h3>
+                <p>
+                  VPS, dedicado e hospedagem com backup e manutenção inclusos.
+                </p>
+              </div>
+              <div class="glass-card hv-top">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg
+                ><span>Backup de segurança</span>
+              </div>
+              <div class="glass-card hv-float">
+                <span class="pulse"></span>
+                <div><b>99,9%</b><span>uptime dos serviços</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SERVIÇOS ================= -->
+      <section class="section-pad wrap" id="servicos">
+        <div class="sec-head reveal">
+          <span class="eyebrow"><span class="dot"></span>O que fazemos</span>
+          <h2 class="display">
+            Tudo para colocar seu órgão online — e mantê‑lo assim.
+          </h2>
+          <p class="lead">
+            Da infraestrutura ao sistema de gestão, cuidamos da tecnologia para
+            você focar no serviço.
+          </p>
+        </div>
+
+        <div class="svc-grid">
+          <article class="card reveal">
+            <div class="card__icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z" />
+              </svg>
+            </div>
+            <h3>Hospedagem</h3>
+            <p>
+              Planos estáveis e seguros para sites e sistemas, com monitoramento
+              contínuo.
+            </p>
+          </article>
+          <article class="card reveal">
+            <div class="card__icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="4" width="18" height="7" rx="2" />
+                <rect x="3" y="13" width="18" height="7" rx="2" />
+                <line x1="7" y1="7.5" x2="7.01" y2="7.5" />
+                <line x1="7" y1="16.5" x2="7.01" y2="16.5" />
+              </svg>
+            </div>
+            <h3>VPS &amp; Dedicado</h3>
+            <p>
+              Locação de servidores com recursos sob medida e desempenho
+              garantido.
+            </p>
+          </article>
+          <article class="card reveal">
+            <div class="card__icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="4" width="18" height="16" rx="2" />
+                <path d="M3 9h18" />
+                <circle cx="6.5" cy="6.5" r=".5" fill="currentColor" />
+              </svg>
+            </div>
+            <h3>Criação de sites</h3>
+            <p>
+              Sites institucionais e transacionais bem construídos, do desenho
+              ao ar.
+            </p>
+          </article>
+          <article class="card reveal">
+            <div class="card__icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M14.7 6.3a4 4 0 00-5.4 5.4l-6 6a2 2 0 102.8 2.8l6-6a4 4 0 005.4-5.4l-2.3 2.3-2.8-.7-.7-2.8z"
+                />
+              </svg>
+            </div>
+            <h3>Instalação &amp; manutenção</h3>
+            <p>
+              Implantação e cuidado contínuo dos serviços para nada parar no
+              meio do caminho.
+            </p>
+          </article>
+          <article class="card reveal">
+            <div class="card__icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 12a9 9 0 11-6.2-8.6" />
+                <path d="M21 4v5h-5" />
+              </svg>
+            </div>
+            <h3>Backup de segurança</h3>
+            <p>
+              Cópias automáticas e recuperação rápida para proteger os dados do
+              órgão.
+            </p>
+          </article>
+          <article
+            class="card reveal"
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              background: var(--md-primary-container);
+            "
+          >
+            <h3 style="color: var(--md-on-primary-container)">
+              Precisa de algo específico?
+            </h3>
+            <p style="color: #33406a; margin-bottom: 20px">
+              Montamos soluções de nuvem personalizadas para a sua realidade.
+            </p>
+            <a
+              class="btn btn--filled btn--sm"
+              style="align-self: flex-start"
+              href="https://api.whatsapp.com/send?phone=5581997306908&text=Quero%20fazer%20um%20or%C3%A7amento!"
+              target="_blank"
+              rel="noopener"
+              >Fazer um orçamento</a
+            >
+          </article>
+        </div>
+
+        <!-- painel setor público -->
+        <div class="pub reveal">
+          <div
+            class="blob"
+            style="
+              background: var(--md-tertiary-bright);
+              width: 300px;
+              height: 300px;
+              top: -120px;
+              right: -80px;
+              opacity: 0.14;
+            "
+          ></div>
+          <div class="pub__grid">
+            <div>
+              <h3>Sistemas e serviços para o setor público</h3>
+              <p>
+                Software especializado em gestão pública, com consultoria e
+                treinamento — inclusive sobre o e‑Social.
+              </p>
+              <a
+                class="btn btn--tertiary"
+                href="https://api.whatsapp.com/send?phone=5581997306908&text=Quero%20conhecer%20os%20sistemas%20para%20o%20setor%20p%C3%BAblico!"
+                target="_blank"
+                rel="noopener"
+                >Conhecer os sistemas</a
+              >
+            </div>
+            <div class="pub__chips">
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Consultoria em e‑Social</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Folha de pagamento</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Portal da Transparência</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Documento Zero</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Digitalização de documentos</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Tributos</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Patrimônio</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Protocolo Web</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Compras</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Educação</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Saúde</span
+              >
+              <span class="chip"
+                ><svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" /></svg
+                >Assistência Social</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= DIFERENCIAIS ================= -->
+      <section class="section-pad wrap diff" id="diferenciais">
+        <div class="diff__inner">
+          <div
+            class="blob"
+            style="
+              background: var(--md-tertiary-bright);
+              width: 420px;
+              height: 420px;
+              top: -140px;
+              left: -100px;
+              opacity: 0.2;
+            "
+          ></div>
+          <div
+            class="blob"
+            style="
+              background: #4f6bb0;
+              width: 380px;
+              height: 380px;
+              bottom: -160px;
+              right: -90px;
+              opacity: 0.4;
+            "
+          ></div>
+          <div class="sec-head center reveal">
+            <span class="eyebrow on-dark"
+              ><span class="dot"></span>Por que a AC Server</span
+            >
+            <h2 class="display">A melhor escolha para quem serve o público.</h2>
+          </div>
+          <div class="diff__grid">
+            <div class="gcard reveal">
+              <div class="gcard__icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </div>
+              <h3>Segurança e confiabilidade</h3>
+              <p>
+                Hospedagem e sistemas protegidos, com estabilidade que o serviço
+                público exige.
+              </p>
+            </div>
+            <div class="gcard reveal">
+              <div class="gcard__icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M21 11.5a8.4 8.4 0 01-1 4 8.5 8.5 0 01-7.5 4.5 8.4 8.4 0 01-4-1L3 21l1-4.5a8.4 8.4 0 01-1-4A8.5 8.5 0 017.5 5a8.4 8.4 0 014-1h.5a8.5 8.5 0 018 8v.5z"
+                  />
+                </svg>
+              </div>
+              <h3>Atendimento próximo</h3>
+              <p>
+                Suporte técnico, treinamento e assistência personalizada quando
+                você precisar.
+              </p>
+            </div>
+            <div class="gcard reveal">
+              <div class="gcard__icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 010-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H9a1.6 1.6 0 001-1.5V3a2 2 0 014 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V9a1.6 1.6 0 001.5 1H21a2 2 0 010 4h-.1a1.6 1.6 0 00-1.5 1z"
+                  />
+                </svg>
+              </div>
+              <h3>Personalização</h3>
+              <p>
+                Sistemas adaptados às necessidades específicas de cada órgão e
+                serviço.
+              </p>
+            </div>
+            <div class="gcard reveal">
+              <div class="gcard__icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1.5 1.5" />
+                  <path d="M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1.5-1.5" />
+                </svg>
+              </div>
+              <h3>Integração</h3>
+              <p>
+                Soluções que conversam com os sistemas que o órgão já utiliza no
+                dia a dia.
+              </p>
+            </div>
+            <div class="gcard reveal">
+              <div class="gcard__icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M9 11l3 3L22 4" />
+                  <path
+                    d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"
+                  />
+                </svg>
+              </div>
+              <h3>Conformidade</h3>
+              <p>
+                Sistemas alinhados às regulamentações e padrões governamentais
+                vigentes.
+              </p>
+            </div>
+            <div
+              class="gcard reveal"
+              style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+              "
+            >
+              <h3>Pronto para começar?</h3>
+              <p style="margin-bottom: 18px">
+                Fale com a gente e receba uma proposta sob medida.
+              </p>
+              <a
+                class="btn btn--tertiary btn--sm"
+                style="align-self: flex-start"
+                href="https://api.whatsapp.com/send?phone=5581997306908&text=Quero%20fazer%20um%20or%C3%A7amento!"
+                target="_blank"
+                rel="noopener"
+                >Entrar em contato</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SOBRE ================= -->
+      <section class="section-pad wrap" id="sobre">
+        <div class="about__grid">
+          <div class="about__text reveal">
+            <span class="eyebrow"
+              ><span class="dot"></span>Sobre a empresa</span
+            >
+            <h2 class="display">
+              Tecnologia no serviço público, do papel à nuvem.
+            </h2>
+            <p>
+              Começamos com um grupo de amigos rascunhando ideias num pedaço de
+              papel. Hoje, entregamos serviços inteligentes e inovadores para
+              clientes em diferentes lugares.
+            </p>
+            <p>
+              Cada solução nasce de uma investigação atenta das expectativas do
+              cliente e das tendências do mercado — e é personalizada para
+              atender a cada demanda.
+            </p>
+            <p>
+              Somos referência em tecnologia e serviços de ponta, com soluções
+              adaptáveis para órgãos de todos os tamanhos.
+            </p>
+            <div class="about__stats">
+              <div class="stat"><b>10+</b><span>anos de estrada</span></div>
+              <div class="stat"><b>12</b><span>sistemas públicos</span></div>
+              <div class="stat"><b>PE</b><span>base em Caruaru</span></div>
+            </div>
+          </div>
+          <div class="about__media reveal">
+            <div class="organic">
+              <svg
+                class="organic__deco"
+                viewBox="0 0 400 420"
+                preserveAspectRatio="xMidYMid slice"
+                aria-hidden="true"
+              >
+                <defs>
+                  <radialGradient id="g1" cx="30%" cy="20%" r="90%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity=".18" />
+                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <rect width="400" height="420" fill="url(#g1)" />
+                <circle cx="320" cy="90" r="120" fill="#ff8c00" opacity=".22" />
+                <circle cx="80" cy="330" r="150" fill="#ffffff" opacity=".08" />
+                <g
+                  fill="none"
+                  stroke="#ffffff"
+                  stroke-opacity=".28"
+                  stroke-width="1.4"
+                >
+                  <rect x="70" y="120" width="150" height="52" rx="12" />
+                  <rect x="70" y="184" width="150" height="52" rx="12" />
+                  <circle cx="92" cy="146" r="5" />
+                  <circle cx="92" cy="210" r="5" />
+                </g>
+              </svg>
+              <div class="badge">
+                <span class="n">100%</span>
+                <p>foco em quem atende o cidadão todos os dias.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CONTATO ================= -->
+      <section class="section-pad wrap contact" id="contato">
+        <div class="contact__inner">
+          <div
+            class="blob"
+            style="
+              background: var(--md-tertiary-bright);
+              width: 360px;
+              height: 360px;
+              top: -120px;
+              right: -80px;
+              opacity: 0.16;
+            "
+          ></div>
+          <div
+            class="blob"
+            style="
+              background: #4f6bb0;
+              width: 340px;
+              height: 340px;
+              bottom: -140px;
+              left: -90px;
+              opacity: 0.4;
+            "
+          ></div>
+          <div class="contact__grid">
+            <div class="reveal">
+              <span class="eyebrow on-dark"
+                ><span class="dot"></span>Fale com a gente</span
+              >
+              <h2 class="display">Quer saber mais? Envie uma mensagem.</h2>
+              <p class="lead">
+                Preencha e continuamos a conversa direto no WhatsApp.
+                Respondemos o mais breve possível.
+              </p>
+              <div class="contact__info">
+                <div class="info-row">
+                  <a class="link-card" href="https://api.whatsapp.com/send/?phone=5581997306908&text&type=phone_number&app_absent=0" target="_blank">
+                    <span class="ic"
+                      ><svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                          d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"
+                        /></svg
+                    ></span>
+                    <div><small>WhatsApp</small><b>(81) 9 9730‑6908</b></div>
+                  </a>
+                </div>
+                <div class="info-row">
+                  <a class="link-card" href="https://instagram.com/_acserver" target="_blank">
+                    <span class="ic"
+                      ><svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                      >
+                        <rect x="3" y="3" width="18" height="18" rx="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle
+                          cx="17.5"
+                          cy="6.5"
+                          r="1"
+                          fill="currentColor"
+                          stroke="none"
+                        /></svg
+                    ></span>
+                    <div><small>Instagram</small><b>@_acserver</b></div>
+                  </a>
+                </div>
+                <div class="info-row">
+                  <a class="link-card" href="https://maps.app.goo.gl/uyANKNubfzanonHbA" target="_blank">
+                    <span class="ic"
+                      ><svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z" />
+                        <circle cx="12" cy="10" r="3" /></svg
+                    ></span>
+                    <div>
+                      <small>Endereço</small
+                      ><b>Rua Lourdes Casé Pôrto, 51, Sala 1505, Caruaru - PE</b>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <form class="form reveal" id="contactForm" novalidate>
+              <div class="field" id="f-nome">
+                <label for="nome">Nome</label>
+                <input
+                  type="text"
+                  id="nome"
+                  name="nome"
+                  placeholder="Como podemos te chamar?"
+                  autocomplete="name"
+                  required
+                />
+                <span class="err">Informe seu nome.</span>
+              </div>
+              <div class="field" id="f-tel">
+                <label for="telefone">Telefone / WhatsApp</label>
+                <input
+                  type="tel"
+                  id="telefone"
+                  name="telefone"
+                  placeholder="(81) 90000‑0000"
+                  autocomplete="tel"
+                  required
+                />
+                <span class="err">Informe um telefone para contato.</span>
+              </div>
+              <div class="field" id="f-msg">
+                <label for="mensagem">Mensagem</label>
+                <textarea
+                  id="mensagem"
+                  name="mensagem"
+                  placeholder="Conte o que você precisa..."
+                  required
+                ></textarea>
+                <span class="err">Escreva uma mensagem.</span>
+              </div>
+              <button type="submit" class="btn btn--tertiary">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z"
+                  />
+                </svg>
+                Enviar pelo WhatsApp
+              </button>
+              <p class="form__note">
+                Ao enviar, abrimos o WhatsApp com sua mensagem já pronta.
+              </p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MAPA ================= -->
+      <section class="wrap" style="padding-bottom: clamp(48px, 7vw, 88px)">
+        <div class="map-wrap reveal">
+          <iframe 
+            title="Mapa de localização do Empresarial Times Business Center"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d987.0829039447261!2d-35.97650840080262!3d-8.269753799999993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7a98be97791a7a1%3A0xa0440645dc95802e!2sEmpresarial%20Times%20Business%20Center!5e0!3m2!1spt-BR!2sbr!4v1783020206977!5m2!1spt-BR!2sbr" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="strict-origin-when-cross-origin">
+          </iframe>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer">
+      <div class="wrap">
+        <div class="footer__grid">
+          <!-- Logo + endereço -->
+          <div>
+            <img
+              class="footer__logo"
+              src="assets/logo-mono.png"
+              alt="AC Server"
+            />
+            <p class="footer__addr">
+              Empresarial Times Business Center — 15º andar, sala 1505<br />Rua
+              Lourdes Casé Pôrto, 51, Maurício de Nassau<br />Caruaru‑PE · CEP
+              55012‑075
+            </p>
+          </div>
+
+          <!-- Contato -->
+          <div class="footer-right">
+            <h4 class="footer__title">Contato</h4>
+            <div class="footer__contact">
+              <a class="fc-row" href="mailto:acserver04@gmail.com">
+                acserver04@gmail.com
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="m3 7 9 6 9-6" />
+                </svg>
+              </a>
+              <a
+                class="fc-row"
+                href="https://wa.me/5581997306908"
+                target="_blank"
+                rel="noopener"
+              >
+                (81) 9 9730‑6908
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="fc-row"
+                href="https://www.instagram.com/_acserver"
+                target="_blank"
+                rel="noopener"
+              >
+                @_acserver
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle
+                    cx="17.5"
+                    cy="6.5"
+                    r="1"
+                    fill="currentColor"
+                    stroke="none"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span
+            >© <span id="year">2024</span> acserver04.com.br — Hospedagem,
+            Cloud, VPS e Dedicado.</span
+          >
+          <span>Feito para o serviço público.</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var header = document.querySelector(".header");
+        var onScroll = function () {
+          header.classList.toggle("is-scrolled", window.scrollY > 8);
+        };
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+
+        var drawer = document.getElementById("drawer");
+        var openBtn = document.getElementById("menuOpen");
+        function setDrawer(open) {
+          drawer.classList.toggle("open", open);
+          openBtn.setAttribute("aria-expanded", open ? "true" : "false");
+          document.body.style.overflow = open ? "hidden" : "";
+        }
+        openBtn.addEventListener("click", function () {
+          setDrawer(true);
+        });
+        drawer.querySelectorAll("[data-close]").forEach(function (el) {
+          el.addEventListener("click", function () {
+            setDrawer(false);
+          });
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") setDrawer(false);
+        });
+
+        var HEAD = 88;
+        document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+          a.addEventListener("click", function (e) {
+            var id = a.getAttribute("href");
+            if (id.length < 2) return;
+            var t = document.querySelector(id);
+            if (!t) return;
+            e.preventDefault();
+            var y = t.getBoundingClientRect().top + window.scrollY - HEAD;
+            window.scrollTo({ top: y, behavior: "smooth" });
+          });
+        });
+
+        var links = Array.prototype.slice.call(
+          document.querySelectorAll(".nav a"),
+        );
+        var sections = links.map(function (l) {
+          return document.querySelector(l.getAttribute("href"));
+        });
+        var spy = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (en) {
+              if (en.isIntersecting) {
+                var i = sections.indexOf(en.target);
+                links.forEach(function (l) {
+                  l.classList.remove("active");
+                });
+                if (links[i]) links[i].classList.add("active");
+              }
+            });
+          },
+          { rootMargin: "-45% 0px -50% 0px" },
+        );
+        sections.forEach(function (s) {
+          if (s) spy.observe(s);
+        });
+
+        var reveals = document.querySelectorAll(".reveal");
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          reveals.forEach(function (r) {
+            r.classList.add("in");
+          });
+        } else {
+          var ro = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (en) {
+                if (en.isIntersecting) {
+                  en.target.classList.add("in");
+                  ro.unobserve(en.target);
+                }
+              });
+            },
+            { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
+          );
+          reveals.forEach(function (r) {
+            ro.observe(r);
+          });
+        }
+
+        var form = document.getElementById("contactForm");
+        var PHONE = "5581997306908";
+        function mark(id, ok) {
+          document.getElementById(id).classList.toggle("invalid", !ok);
+        }
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var nome = form.nome.value.trim();
+          var tel = form.telefone.value.trim();
+          var msg = form.mensagem.value.trim();
+          var ok = true;
+          if (!nome) {
+            mark("f-nome", false);
+            ok = false;
+          } else mark("f-nome", true);
+          if (!tel) {
+            mark("f-tel", false);
+            ok = false;
+          } else mark("f-tel", true);
+          if (!msg) {
+            mark("f-msg", false);
+            ok = false;
+          } else mark("f-msg", true);
+          if (!ok) {
+            form
+              .querySelector(".field.invalid input, .field.invalid textarea")
+              .focus();
+            return;
+          }
+
+          var texto =
+            "Olá, AC Server! 👋%0A%0A" +
+            "*Nome:* " +
+            encodeURIComponent(nome) +
+            "%0A" +
+            "*Telefone:* " +
+            encodeURIComponent(tel) +
+            "%0A%0A" +
+            encodeURIComponent(msg);
+          window.open(
+            "https://api.whatsapp.com/send?phone=" + PHONE + "&text=" + texto,
+            "_blank",
+            "noopener",
+          );
+        });
+        ["nome", "telefone", "mensagem"].forEach(function (n) {
+          form[n].addEventListener("input", function () {
+            form[n].closest(".field").classList.remove("invalid");
+          });
+        });
+
+        document.getElementById("year").textContent = new Date().getFullYear();
+      })();
+    </script>
+  </body>
+</html>
